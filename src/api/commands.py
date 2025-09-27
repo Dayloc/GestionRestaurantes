@@ -1,34 +1,102 @@
-
 import click
-from api.models import db, User
+from api.models import db, Cliente, Post, Restaurant, Trabajador, Comentario
 
-"""
-In this file, you can add as many commands as you want using the @app.cli.command decorator
-Flask commands are usefull to run cronjobs or tasks outside of the API but sill in integration 
-with youy database, for example: Import the price of bitcoin every night as 12am
-"""
 def setup_commands(app):
-    
-    """ 
-    This is an example command "insert-test-users" that you can run from the command line
-    by typing: $ flask insert-test-users 5
-    Note: 5 is the number of users to add
-    """
-    @app.cli.command("insert-test-users") # name of our command
-    @click.argument("count") # argument of out command
-    def insert_test_users(count):
-        print("Creating test users")
+
+    #  Insertar clientes de prueba
+    @app.cli.command("insert-test-clients")
+    @click.argument("count")
+    def insert_test_clients(count):
+        print("Creando clientes de prueba...")
         for x in range(1, int(count) + 1):
-            user = User()
-            user.email = "test_user" + str(x) + "@test.com"
-            user.password = "123456"
-            user.is_active = True
-            db.session.add(user)
-            db.session.commit()
-            print("User: ", user.email, " created.")
+            cliente = Cliente(
+                nombre=f"Cliente{x}",
+                primer_apellido=f"Apellido{x}",
+                email=f"cliente{x}@test.com",
+                password="123456"
+            )
+            db.session.add(cliente)
+        db.session.commit()
+        print(f"{count} clientes de prueba creados ✅")
 
-        print("All test users created")
+    #  Insertar restaurantes de prueba
+    @app.cli.command("insert-test-restaurants")
+    @click.argument("count")
+    def insert_test_restaurants(count):
+        print("Creando restaurantes de prueba...")
+        for x in range(1, int(count) + 1):
+            restaurant = Restaurant(
+                nombre=f"Restaurante{x}",
+                cantidad_trabajadores=5,
+                localizacion=f"Ciudad{x}"
+            )
+            db.session.add(restaurant)
+        db.session.commit()
+        print(f"{count} restaurantes de prueba creados ✅")
 
-    @app.cli.command("insert-test-data")
-    def insert_test_data():
-        pass
+    #  Insertar trabajadores de prueba
+    @app.cli.command("insert-test-trabajadores")
+    @click.argument("count")
+    def insert_test_trabajadores(count):
+        print("Creando trabajadores de prueba...")
+        restaurants = Restaurant.query.all()
+        if not restaurants:
+            print("⚠️ No hay restaurantes, crea algunos primero con: flask insert-test-restaurants N")
+            return
+
+        for x in range(1, int(count) + 1):
+            trabajador = Trabajador(
+                nombre=f"Trabajador{x}",
+                primer_apellido=f"Apellido{x}",
+                email=f"trabajador{x}@test.com",
+                password="123456",
+                restaurant_id=restaurants[x % len(restaurants)].id  # se asignan a restaurantes existentes
+            )
+            db.session.add(trabajador)
+        db.session.commit()
+        print(f"{count} trabajadores de prueba creados ✅")
+
+    #  Insertar posts de prueba
+    @app.cli.command("insert-test-posts")
+    @click.argument("count")
+    def insert_test_posts(count):
+        print("Creando posts de prueba...")
+        clientes = Cliente.query.all()
+        restaurants = Restaurant.query.all()
+
+        if not clientes or not restaurants:
+            print("⚠️ Necesitas clientes y restaurantes primero")
+            return
+
+        for x in range(1, int(count) + 1):
+            post = Post(
+                titulo=f"Post de prueba {x}",
+                media=None,
+                cliente_id=clientes[x % len(clientes)].id,
+                restaurante_id=restaurants[x % len(restaurants)].id
+            )
+            db.session.add(post)
+        db.session.commit()
+        print(f"{count} posts de prueba creados ✅")
+
+    #  Insertar comentarios de prueba
+    @app.cli.command("insert-test-comentarios")
+    @click.argument("count")
+    def insert_test_comentarios(count):
+        print("Creando comentarios de prueba...")
+        clientes = Cliente.query.all()
+        posts = Post.query.all()
+
+        if not clientes or not posts:
+            print("⚠️ Necesitas clientes y posts primero")
+            return
+
+        for x in range(1, int(count) + 1):
+            comentario = Comentario(
+                texto=f"Comentario de prueba {x}",
+                post_id=posts[x % len(posts)].id,
+                user_id=clientes[x % len(clientes)].id
+            )
+            db.session.add(comentario)
+        db.session.commit()
+        print(f"{count} comentarios de prueba creados ✅")

@@ -8,8 +8,15 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
+from api.rutas import rest
+from api.rutas import clien
+from api.rutas import poster
+from api.rutas import trab
+from api.rutas import comm
+from flask_jwt_extended import JWTManager
 from api.admin import setup_admin
 from api.commands import setup_commands
+from datetime import timedelta
 
 # from models import Person
 
@@ -31,6 +38,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 
+app.config["JWT_SECRET_KEY"] = "nada_es_real_solo_tu_que_te_parece"  # Change this!
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+jwt = JWTManager(app)
+
+
+
 # add the admin
 setup_admin(app)
 
@@ -39,6 +52,11 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(rest)
+app.register_blueprint(poster)
+app.register_blueprint(clien)
+app.register_blueprint(trab)
+app.register_blueprint(comm) 
 
 # Handle/serialize errors like a JSON object
 
