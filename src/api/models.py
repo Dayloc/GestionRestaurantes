@@ -100,8 +100,6 @@ class Trabajador(db.Model):
             "restaurant_id": self.restaurant_id
         }
 
-   
-
     @classmethod
     def crear(cls, nombre, primer_apellido, email, password, restaurant_id):
         nuevo = cls(
