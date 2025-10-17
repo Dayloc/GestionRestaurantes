@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import Cliente
 import bcrypt
+from flask_jwt_extended import create_access_token
 
 clien = Blueprint('clien', __name__, url_prefix="/clien")
 
@@ -26,7 +27,7 @@ def get_cliente(cliente_id):
     return jsonify(dic), 200
 
 # POST: Crear cliente
-@clien.route("/", methods=["POST"])
+@clien.route("/register", methods=["POST"])
 def create_cliente():
     data = request.get_json()
     required_fields = ["nombre", "primer_apellido", "email", "password"]
@@ -76,3 +77,33 @@ def delete_cliente(cliente_id):
 
     cliente.eliminar()
     return jsonify({"msg": f"Cliente {cliente_id} eliminado"}), 200
+
+
+# LOGIN CLIENTE
+@clien.route("/cliente", methods=["POST"])
+def login_cliente():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email y contraseña son requeridos"}), 400
+
+    cliente = Cliente.query.filter_by(email=email).first()
+    if not cliente:
+        return jsonify({"error": "Cliente no encontrado"}), 404
+
+    # CONTRASEÑA
+    if not bcrypt.checkpw(password.encode("utf-8"), cliente.password.encode("utf-8")):
+        return jsonify({"error": "La contraseña no es correcta"}), 401
+
+    # TOKEN JWT
+    token = create_access_token(
+        identity={"id": cliente.id, "rol": "cliente"}
+    )
+
+    return jsonify({
+        "msg": "Login exitoso",
+        "token": token,
+        "cliente": cliente.to_dict()
+    }), 200

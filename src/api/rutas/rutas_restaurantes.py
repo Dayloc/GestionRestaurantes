@@ -17,7 +17,7 @@ def get_restaurante(rest_id):
     return jsonify(r.to_dict()), 200
 
 # POST: Crear restaurante
-@rest.route("/", methods=["POST"])
+@rest.route("/register", methods=["POST"])
 def create_restaurante():
     data = request.get_json()
     required_fields = ["nombre", "cantidad_trabajadores", "localizacion"]
