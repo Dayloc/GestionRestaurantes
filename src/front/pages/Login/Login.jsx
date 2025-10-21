@@ -1,4 +1,5 @@
 import "./styleLogin.css";
+import {Link} from "react-router-dom";
 
 export default function Login() {
   return (
@@ -24,6 +25,8 @@ export default function Login() {
 
           <button type="submit">Ingresar</button>
         </form>
+    <p className="mt-3">Si aún no te has registrado,<Link className="text-warning" to="/register"> haz click aquí</Link>  </p>
+    
       </div>
     </div>
   );
