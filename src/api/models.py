@@ -23,6 +23,8 @@ class Restaurant(db.Model):
     nombre: Mapped[str] = mapped_column(String(120), nullable=False)
     cantidad_trabajadores: Mapped[int] = mapped_column(nullable=False)
     localizacion: Mapped[str] = mapped_column(String(200), nullable=False)
+    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    password: Mapped[str] = mapped_column(nullable=False)  
 
     trabajadores: Mapped[List["Trabajador"]] = relationship(
         back_populates="restaurant",
@@ -45,13 +47,14 @@ class Restaurant(db.Model):
             "localizacion": self.localizacion,
             "trabajadores": [t.id for t in self.trabajadores],
             "clientes": [c.id for c in self.clientes],
-            "posts": [p.id for p in self.posts]
+            "posts": [p.id for p in self.posts],
+            "email": self.email,
         }
 
    
     @classmethod
-    def crear(cls, nombre, cantidad_trabajadores, localizacion):
-        nuevo_restaurante = cls(nombre=nombre, cantidad_trabajadores=cantidad_trabajadores, localizacion=localizacion)
+    def crear(cls, nombre, cantidad_trabajadores, localizacion, email, password):
+        nuevo_restaurante = cls(nombre=nombre, cantidad_trabajadores=cantidad_trabajadores, localizacion=localizacion, email=email, password=password)
         db.session.add(nuevo_restaurante)
         db.session.commit()
         return nuevo_restaurante

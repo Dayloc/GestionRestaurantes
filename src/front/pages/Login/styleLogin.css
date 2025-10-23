@@ -1,0 +1,104 @@
+/* === Fondo general === */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1920&q=80')
+    no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* === Capa oscura encima del fondo === */
+.login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Caja del formulario === */
+.login-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px 50px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  text-align: center;
+}
+
+/* === Título === */
+.login-container h2 {
+  margin-bottom: 25px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ffcf80; /* dorado suave */
+}
+
+/* === Inputs === */
+.login-container input[type="email"],
+.login-container input[type="password"],
+.login-container input[type="text"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0 20px 0;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 15px;
+}
+
+/* === Placeholders === */
+.login-container input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* === Botón === */
+.login-container button {
+  width: 100%;
+  background: linear-gradient(135deg, #ffb347, #ffcc33);
+  color: #000;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-container button:hover {
+  background: linear-gradient(135deg, #ffc14d, #ffda77);
+  transform: scale(1.03);
+}
+
+/* === Radio de tipo de usuario === */
+.user-type {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.user-type label {
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+/* === Pequeños ajustes responsivos === */
+@media (max-width: 500px) {
+  .login-container {
+    padding: 30px;
+  }
+
+  .login-container h2 {
+    font-size: 1.3rem;
+  }
+}
