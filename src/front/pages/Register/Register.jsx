@@ -189,3 +189,7 @@ export default function Register() {
     </div>
   );
 }
+
+
+
+//en la rama origin hago el git merge nombre_rama
